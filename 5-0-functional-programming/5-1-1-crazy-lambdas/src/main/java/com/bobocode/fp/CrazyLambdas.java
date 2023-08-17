@@ -160,7 +160,10 @@ public class CrazyLambdas {
      * @return a runnable consumer
      */
     public static Consumer<Runnable> newThreadRunnableConsumer() {
-        throw new ExerciseNotCompletedException();
+        return n -> {
+            Thread thread = new Thread(n);
+            thread.start();
+        };
     }
 
     /**
@@ -170,7 +173,11 @@ public class CrazyLambdas {
      * @return a function that transforms runnable into a thread supplier
      */
     public static Function<Runnable, Supplier<Thread>> runnableToThreadSupplierFunction() {
-        throw new ExerciseNotCompletedException();
+        return (n) -> () -> {
+            Thread thread = new Thread(n);
+            thread.start();
+            return thread;
+        };
     }
 
     /**
@@ -183,7 +190,7 @@ public class CrazyLambdas {
      * @return a binary function that receiver predicate and function and compose them to create a new function
      */
     public static BiFunction<IntUnaryOperator, IntPredicate, IntUnaryOperator> functionToConditionalFunction() {
-        throw new ExerciseNotCompletedException();
+        return (n,m) -> x -> m.test(x) ? n.applyAsInt(x) : x;
     }
 
     /**
@@ -194,7 +201,7 @@ public class CrazyLambdas {
      * @return a high-order function that fetches a function from a function map by a given name or returns identity()
      */
     public static BiFunction<Map<String, IntUnaryOperator>, String, IntUnaryOperator> functionLoader() {
-        throw new ExerciseNotCompletedException();
+        return (n,m) -> n.containsKey(m) ? n.get(m) : IntUnaryOperator.identity();
     }
 
     /**
@@ -212,7 +219,7 @@ public class CrazyLambdas {
      * @return a comparator instance
      */
     public static <T, U extends Comparable<? super U>> Comparator<T> comparing(Function<? super T, ? extends U> mapper) {
-        throw new ExerciseNotCompletedException();
+        return (n,m) -> mapper.apply(n).compareTo(mapper.apply(m));
     }
 
     /**
@@ -232,7 +239,10 @@ public class CrazyLambdas {
      */
     public static <T, U extends Comparable<? super U>> Comparator<T> thenComparing(
             Comparator<? super T> comparator, Function<? super T, ? extends U> mapper) {
-        throw new ExerciseNotCompletedException();
+        return (n, m) -> {
+            var result = comparator.compare(n,m);
+            return (result == 0) ? mapper.apply(n).compareTo(mapper.apply(m)) : result;
+        };
     }
 
     /**
@@ -241,7 +251,7 @@ public class CrazyLambdas {
      * @return a supplier instance
      */
     public static Supplier<Supplier<Supplier<String>>> trickyWellDoneSupplier() {
-        throw new ExerciseNotCompletedException();
+        return () -> () -> () -> "WELL DONE!";
     }
 }
 
